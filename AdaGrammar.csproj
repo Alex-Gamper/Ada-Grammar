@@ -49,10 +49,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdaLexer.cs" />
+    <Compile Include="AdaParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Antlr4 Include="Ada.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>AdaGrammar</CustomToolNamespace>
+    </Antlr4>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
