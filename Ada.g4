@@ -256,6 +256,8 @@ body							:	proper_body | body_stub ;
 proper_body						:	subprogram_body | package_body | task_body | protected_body ;
 
 //4.1
+package_name    : IDENTIFIER ( DOT IDENTIFIER)*;
+
 full_name	:	IDENTIFIER 
             ( DOT
                     ( IDENTIFIER 
@@ -294,7 +296,7 @@ selector_name					:	IDENTIFIER | CHARACTER_LITERAL | operator_symbol ;
 
 attribute_reference				:	full_name TIC attribute_designator ;
 
-attribute_designator			:	IDENTIFIER ( '(' expression ')' )? | ACCESS | DELTA | DIGITS | MOD ;
+attribute_designator			:	IDENTIFIER ( '(' expression ')' )? | ACCESS | DELTA | DIGITS | MOD ( '(' expression ')' )?;
 
 range_attribute_reference		:	prefix TIC range_attribute_designator ;
 
@@ -370,7 +372,7 @@ simple_expression				:	(unary_adding_operator)? term (binary_adding_operator ter
 
 term							:	factor (multiplying_operator factor)* ;
 
-factor							:	primary ('**' primary)? | ABS primary | NOT primary ;
+factor							:	ABS primary | NOT primary | primary (EXPON primary)?;
 
 primary							:	NUMERIC_LITERAL | NULL | STRING_LITERAL 
     | name | allocator | '(' expression ')'
@@ -390,7 +392,7 @@ unary_adding_operator			:	'+' | '-' ;
 
 multiplying_operator			:	'*' | '/' | MOD | REM ;
 
-highest_precedence_operator		:	'**' | ABS | NOT ;
+highest_precedence_operator		:	EXPON | ABS | NOT ;
 
 conditional_expression			:	if_expression | case_expression ;
 
@@ -530,7 +532,7 @@ designator					:	(parent_unit_name DOT )? IDENTIFIER | operator_symbol ;
 
 defining_designator			:	defining_program_unit_name | defining_operator_symbol ;
 
-defining_program_unit_name	:	(parent_unit_name . )? IDENTIFIER ;
+defining_program_unit_name	:	(parent_unit_name DOT )? IDENTIFIER ;
 
 operator_symbol				:	STRING_LITERAL ;
 
@@ -623,7 +625,7 @@ overriding_indicator	:	(NOT)? OVERRIDING ;
 //8.4
 use_clause				:	use_package_clause | use_type_clause ;
 
-use_package_clause		:	USE name (',' name)* ';' ;
+use_package_clause		:	USE package_name (',' package_name)* ';' ;
 
 use_type_clause			:	USE (ALL)? TYPE subtype_mark (',' subtype_mark)* ';' ;
 
@@ -881,9 +883,9 @@ context_item			:	(pragma)* (with_clause | use_clause | pragma) ;
 
 with_clause				:	limited_with_clause | nonlimited_with_clause ;
 
-limited_with_clause		:	LIMITED (PRIVATE)? WITH name (',' name)* ';' ;
+limited_with_clause		:	LIMITED (PRIVATE)? WITH package_name (',' package_name)* ';' ;
 
-nonlimited_with_clause	:	(PRIVATE)? WITH name (',' name)* ';' ;
+nonlimited_with_clause	:	(PRIVATE)? WITH package_name (',' package_name)* ';' ;
 
 body_stub				:	subprogram_body_stub | package_body_stub | task_body_stub | protected_body_stub ;
 
