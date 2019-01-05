@@ -256,29 +256,22 @@ body							:	proper_body | body_stub ;
 proper_body						:	subprogram_body | package_body | task_body | protected_body ;
 
 //4.1
-package_name    : IDENTIFIER ( DOT IDENTIFIER)*;
+package_name    :   IDENTIFIER ( DOT IDENTIFIER)*;
 
-full_name	:	IDENTIFIER 
-            ( DOT
-                    ( IDENTIFIER 
-                    | CHARACTER_LITERAL 
-                    | STRING_LITERAL 
-                    ) 
-            | TIC IDENTIFIER
-            )*	 
-    ; 
+full_name       :   IDENTIFIER ( DOT ( IDENTIFIER | CHARACTER_LITERAL | STRING_LITERAL ) | TIC IDENTIFIER )*	 
+                ; 
 
-name	:	direct_name | explicit_dereference
-    | indexed_component | slice
-    | selected_component | attribute_reference
-    | type_conversion
-//	| function_call
-    | CHARACTER_LITERAL
-    | qualified_expression
-    | generalized_reference | generalized_indexing
-    ;
+name    :   direct_name | explicit_dereference
+        |   indexed_component | slice
+        |   selected_component | attribute_reference
+        |   type_conversion
+        |   function_call
+        |   CHARACTER_LITERAL
+        |   qualified_expression
+        |   generalized_reference | generalized_indexing
+        ;
 
-direct_name						:	IDENTIFIER | operator_symbol ;
+direct_name						:	IDENTIFIER | operator_symbol (TIC IDENTIFIER)?;
 
 prefix							:	full_name ;
 
@@ -343,26 +336,26 @@ array_component_association		:	discrete_choice_list '=>' expression
     ;
 
 //4.4
-expression	:	relation (AND relation)*
-    | relation (AND THEN relation)*
-    | relation (OR relation)*
-    | relation (OR ELSE relation)*
-    | relation (XOR relation)*
-    ;
+expression          :   relation (AND relation)*
+                    |   relation (AND THEN relation)*
+                    |   relation (OR relation)*
+                    |   relation (OR ELSE relation)*
+                    |   relation (XOR relation)*
+                    ;
 
 choice_expression	:	choice_relation (AND choice_relation)*
-    | choice_relation (OR choice_relation)*
-    | choice_relation (XOR choice_relation)*
-    | choice_relation (AND THEN choice_relation)*
-    | choice_relation (OR ELSE choice_relation)*
-    ;
+                    |   choice_relation (OR choice_relation)*
+                    |   choice_relation (XOR choice_relation)*
+                    |   choice_relation (AND THEN choice_relation)*
+                    |   choice_relation (OR ELSE choice_relation)*
+                    ;
 
 choice_relation					:	simple_expression (relational_operator simple_expression)? ;
 
 relation						:	simple_expression (relational_operator simple_expression)?
-    | simple_expression (NOT)? IN membership_choice_list
-    | raise_expression
-    ;
+                                |   simple_expression (NOT)? IN membership_choice_list
+                                |   raise_expression
+                                ;
 
 membership_choice_list			:	membership_choice ('|' membership_choice)* ;
 
@@ -374,12 +367,12 @@ term							:	factor (multiplying_operator factor)* ;
 
 factor							:	ABS primary | NOT primary | primary (EXPON primary)?;
 
-primary							:	NUMERIC_LITERAL | NULL | STRING_LITERAL 
-    | name | allocator | '(' expression ')'
-    | '(' conditional_expression ')'
-    | '(' quantified_expression ')'
-    | aggregate
-    ;
+primary							:   name | allocator | '(' expression ')'
+                                |   ('(')? conditional_expression (')')?
+                                |   '(' quantified_expression ')'
+                                |   aggregate
+                                |   NUMERIC_LITERAL | NULL | STRING_LITERAL 
+                                ;
 
 //4.5
 logical_operator				:	AND | OR | XOR ;
@@ -397,9 +390,9 @@ highest_precedence_operator		:	EXPON | ABS | NOT ;
 conditional_expression			:	if_expression | case_expression ;
 
 if_expression					:	IF condition THEN expression
-    (ELSIF condition THEN expression)*
-    (ELSE expression)?
-    ;
+                                    (ELSIF condition THEN expression)*
+                                    (ELSE expression)?
+                                ;
 
 condition						:	expression ;
 
@@ -408,8 +401,8 @@ case_expression					:	CASE expression IS case_expression_alternative (',' case_e
 case_expression_alternative		:	WHEN discrete_choice_list '=>' expression ;
 
 quantified_expression			:	FOR quantifier loop_parameter_specification '=>' predicate
-    | FOR quantifier iterator_specification '=>' predicate
-    ;
+                                |   FOR quantifier iterator_specification '=>' predicate
+                                ;
 
 quantifier						:	ALL | SOME ;
 
@@ -423,8 +416,8 @@ qualified_expression			:	subtype_mark TIC '('expression')' | subtype_mark TIC ag
 
 //4.8:
 allocator						:	NEW (subpool_specification)? subtype_indication
-    | NEW (subpool_specification)? qualified_expression
-    ;
+                                |   NEW (subpool_specification)? qualified_expression
+                                ;
 
 subpool_specification			:	'(' name ')' ;
 
@@ -445,6 +438,7 @@ simple_statement		:	null_statement
     | abort_statement
     | raise_statement
     | code_statement
+    | pragma
     ;
 
 compound_statement		:	if_statement
@@ -564,32 +558,26 @@ subprogram_body	:
     END (designator)? ';'
     ;
 
-//function_call	:	name
-//	| prefix actual_parameter_part
-//	;
+function_call	:	(direct_name | prefix) (actual_parameter_part)?
+	            ;
 
-actual_parameter_part		:	'(' parameter_association (',' parameter_association)* ')' ;
+actual_parameter_part               :	'(' parameter_association (',' parameter_association)* ')' ;
 
-parameter_association		:	(selector_name '=>' )? explicit_actual_parameter ;
+parameter_association               :	(selector_name '=>' )? explicit_actual_parameter ;
 
-explicit_actual_parameter	:	expression | name ;
+explicit_actual_parameter           :	expression | name ;
 
-simple_return_statement		:	RETURN (expression)? ';' ;
+simple_return_statement             :	RETURN (expression)? ';' ;
 
 extended_return_object_declaration	:	IDENTIFIER COLON (ALIASED)? (CONSTANT)? return_subtype_indication (':=' expression)? ;
 
-extended_return_statement	:	RETURN extended_return_object_declaration (DO handled_sequence_of_statements END RETURN)? ';' ;
+extended_return_statement           :	RETURN extended_return_object_declaration (DO handled_sequence_of_statements END RETURN)? ';' ;
 
-return_subtype_indication	:	subtype_indication | access_definition ;
+return_subtype_indication           :	subtype_indication | access_definition ;
 
-null_procedure_declaration	:
-    (overriding_indicator)? procedure_specification IS NULL (aspect_specification)? ';'
-    ;
+null_procedure_declaration          :   (overriding_indicator)? procedure_specification IS NULL (aspect_specification)? ';' ;
 
-expression_function_declaration	:
-    (overriding_indicator)? function_specification IS '(' expression ')' (aspect_specification) ';'
-    | (overriding_indicator)? function_specification IS aggregate (aspect_specification)? ';'
-    ;
+expression_function_declaration     :   (overriding_indicator)? function_specification IS '(' expression ')' (aspect_specification)? ';' ;
 
 //7.1
 package_declaration		:	package_specification ';' ;
@@ -605,7 +593,7 @@ package_specification	:	PACKAGE defining_program_unit_name	(aspect_specification
 package_body	:	PACKAGE BODY defining_program_unit_name (aspect_specification)? IS
     declarative_part
     (BEGIN handled_sequence_of_statements)?
-    END ((parent_unit_name DOT )? IDENTIFIER)?
+    END ((parent_unit_name DOT )? IDENTIFIER)? ';'
     ;
 
 //7.3
@@ -695,6 +683,7 @@ task_body	:
 protected_type_declaration	:
     PROTECTED TYPE IDENTIFIER (known_discriminant_part)?
     (aspect_specification)? IS
+    (pragma)*
     (NEW interface_list WITH)?
     protected_definition ';'
     ;
@@ -1250,7 +1239,8 @@ COMMA              :       ','     ;
 SEMI               :       ';'     ; 
 TIC                :       '\''    ; 
 
-IDENTIFIER			: NONDIGIT ( ('_')? ( NONDIGIT|DIGIT ) )* ;
+IDENTIFIER			: NONDIGIT ( ('_')? ( NONDIGIT|DIGIT ) )* 
+                    | '["' BASED_NUMERAL '"]';
 
 //2.4
 NUMERIC_LITERAL		: DECIMAL_LITERAL | BASED_LITERAL ;
