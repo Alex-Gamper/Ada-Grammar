@@ -50,46 +50,44 @@ pragma_argument_aspect_mark
 //2.9 reserved words
 
 //3.1
-basic_declaration	:
-    type_declaration
-    | subtype_declaration
-    | object_declaration
-    | number_declaration
-    | subprogram_declaration
-    | abstract_subprogram_declaration
-    | null_procedure_declaration
-    | expression_function_declaration
-    | package_declaration
-    | renaming_declaration
-    | exception_declaration
-    | generic_declaration
-    | generic_instantiation ;
+basic_declaration	    : type_declaration
+                        | subtype_declaration
+                        | object_declaration
+                        | number_declaration
+                        | subprogram_declaration
+                        | abstract_subprogram_declaration
+                        | null_procedure_declaration
+                        | expression_function_declaration
+                        | package_declaration
+                        | renaming_declaration
+                        | exception_declaration
+                        | generic_declaration
+                        | generic_instantiation
+                        ;
 
-defining_identifier	: IDENTIFIER ;
+defining_identifier	    : IDENTIFIER ;
 
 //3.2.1
-type_declaration	: full_type_declaration
-    | incomplete_type_declaration
-    | private_type_declaration
-    | private_extension_declaration
-    ;
+type_declaration	    : full_type_declaration
+                        | incomplete_type_declaration
+                        | private_type_declaration
+                        | private_extension_declaration
+                        ;
 
-full_type_declaration	:
-    TYPE IDENTIFIER (known_discriminant_part)? IS type_definition (aspect_specification)? ';'
-    | task_type_declaration
-    | protected_type_declaration
-    ;
+full_type_declaration	: TYPE IDENTIFIER (known_discriminant_part)? IS type_definition (aspect_specification)? ';'
+                        | task_type_declaration
+                        | protected_type_declaration
+                        ;
 
-type_definition		:
-    enumeration_type_definition
-    | integer_type_definition
-    | real_type_definition
-    | array_type_definition
-    | record_type_definition
-    | access_type_definition
-    | derived_type_definition
-    | interface_type_definition
-    ;
+type_definition		    : enumeration_type_definition
+                        | integer_type_definition
+                        | real_type_definition
+                        | array_type_definition
+                        | record_type_definition
+                        | access_type_definition
+                        | derived_type_definition
+                        | interface_type_definition
+                        ;
 
 //3.2.2
 subtype_declaration		:	SUBTYPE IDENTIFIER IS subtype_indication (aspect_specification)? ';' ;
@@ -106,11 +104,11 @@ composite_constraint	:	index_constraint | discriminant_constraint ;
 
 //3.3.1
 object_declaration		:	defining_identifier_list COLON (ALIASED)? (CONSTANT)? subtype_indication (':=' expression)? (aspect_specification)? ';'
-    | defining_identifier_list COLON (ALIASED)? (CONSTANT)? access_definition (':=' expression)? (aspect_specification)? ';'
-    | defining_identifier_list COLON (ALIASED)? (CONSTANT)? array_type_definition (':=' expression)? (aspect_specification)? ';'
-    | single_task_declaration
-    | single_protected_declaration
-    ;
+                        |   defining_identifier_list COLON (ALIASED)? (CONSTANT)? access_definition (':=' expression)? (aspect_specification)? ';'
+                        |   defining_identifier_list COLON (ALIASED)? (CONSTANT)? array_type_definition (':=' expression)? (aspect_specification)? ';'
+                        |   single_task_declaration
+                        |   single_protected_declaration
+                        ;
 
 defining_identifier_list		:	IDENTIFIER (',' IDENTIFIER)* ;
 
@@ -124,8 +122,8 @@ derived_type_definition			:	(ABSTRACT)? (LIMITED)? NEW subtype_indication ((AND 
 range_constraint				:	RANGE range ;
 
 range							:	range_attribute_reference
-    | simple_expression '..' simple_expression
-    ;
+                                |   simple_expression '..' simple_expression
+                                ;
 
 enumeration_type_definition		:	'(' enumeration_literal_specification (',' enumeration_literal_specification)* ')' ;
 
@@ -165,8 +163,8 @@ constrained_array_definition	:	ARRAY '(' discrete_subtype_definition (',' discre
 discrete_subtype_definition		:	subtype_indication | range ;
 
 component_definition			:	(ALIASED)? subtype_indication 
-    | (ALIASED)? access_definition
-    ;
+                                |   (ALIASED)? access_definition
+                                ;
 
 index_constraint				:	'(' discrete_range (',' discrete_range)* ')' ;
 
@@ -180,8 +178,8 @@ unknown_discriminant_part		:	'(' '<>' ')' ;
 known_discriminant_part			:	'(' discriminant_specification (';' discriminant_specification)* ')' ;
 
 discriminant_specification		:	defining_identifier_list COLON (null_exclusion)? subtype_mark (':=' default_expression)?
-    | defining_identifier_list COLON access_definition (':=' default_expression)?
-    ;
+                                |   defining_identifier_list COLON access_definition (':=' default_expression)?
+                                ;
 
 default_expression				:	expression ;
 
@@ -193,13 +191,13 @@ discriminant_association		:	(selector_name ('|' selector_name)* '=>')? expressio
 record_type_definition			:	((ABSTRACT)? TAGGED)? (LIMITED)? record_definition ;
 
 record_definition				:	RECORD component_list END RECORD
-    | NULL RECORD
-    ;
+                                |   NULL RECORD
+                                ;
 
 component_list					:	component_item (component_item)*
-    | (component_item)* variant_part
-    | NULL ';'
-    ;
+                                |   (component_item)* variant_part
+                                |   NULL ';'
+                                ;
 
 component_item					:	pragma | component_declaration | aspect_clause ;
 
@@ -224,23 +222,23 @@ interface_list					:	subtype_mark (AND subtype_mark)* ;
 
 //3.10
 access_type_definition			:	(null_exclusion)? access_to_object_definition
-    | (null_exclusion)? access_to_subprogram_definition
-    ;
+                                |   (null_exclusion)? access_to_subprogram_definition
+                                ;
 
 access_to_object_definition		:	ACCESS (general_access_modifier)? subtype_indication ;
 
 general_access_modifier			:	ALL | CONSTANT ;
 
 access_to_subprogram_definition	:	ACCESS (PROTECTED)? PROCEDURE parameter_profile
-    | ACCESS (PROTECTED)? FUNCTION parameter_and_result_profile
-    ;
+                                |   ACCESS (PROTECTED)? FUNCTION parameter_and_result_profile
+                                ;
 
 null_exclusion					:	NOT NULL ;
 
 access_definition				:	(null_exclusion)? ACCESS (CONSTANT)? subtype_mark
-    | (null_exclusion)? ACCESS (PROTECTED)? PROCEDURE parameter_profile
-    | (null_exclusion)? ACCESS (PROTECTED)? FUNCTION parameter_and_result_profile
-    ;
+                                |   (null_exclusion)? ACCESS (PROTECTED)? PROCEDURE parameter_profile
+                                |   (null_exclusion)? ACCESS (PROTECTED)? FUNCTION parameter_and_result_profile
+                                ;
 
 incomplete_type_declaration		:	TYPE IDENTIFIER (discriminant_part)? (IS TAGGED)? ';' ;
 
@@ -264,10 +262,8 @@ full_name       :   IDENTIFIER ( DOT ( IDENTIFIER | CHARACTER_LITERAL | STRING_L
 name    :   direct_name | explicit_dereference
         |   indexed_component | slice
         |   selected_component | attribute_reference
-        |   type_conversion
-        |   function_call
-        |   CHARACTER_LITERAL
-        |   qualified_expression
+        |   type_conversion | function_call
+        |   CHARACTER_LITERAL | qualified_expression
         |   generalized_reference | generalized_indexing
         ;
 
@@ -299,6 +295,13 @@ generalized_reference			:	full_name ;
 
 generalized_indexing			:	prefix actual_parameter_part ;
 
+function_call                   :   (direct_name | prefix) (actual_parameter_part)? ;
+
+////6.4
+//function_call                   :   name
+//                                |   prefix actual_parameter_part
+//                                ;
+
 //4.2 literals
 
 //4.3
@@ -307,16 +310,16 @@ aggregate						:	record_aggregate | extension_aggregate | array_aggregate ;
 record_aggregate				:	'(' record_component_association_list ')' ;
 
 record_component_association_list	:	record_component_association (',' record_component_association)*
-    | NULL RECORD
-    ;
+                                    | NULL RECORD
+                                    ;
 
 record_component_association	:	(component_choice_list '=>')? expression
-    | component_choice_list '=>' '<>'
-    ;
+                                |   component_choice_list '=>' '<>'
+                                ;
 
 component_choice_list			:	selector_name ('|' selector_name)*
-    | OTHERS
-    ;
+                                |   OTHERS
+                                ;
 
 extension_aggregate				:	'(' ancestor_part WITH record_component_association_list ')' ;
 
@@ -325,30 +328,30 @@ ancestor_part					:	expression | subtype_mark ;
 array_aggregate					:	positional_array_aggregate | named_array_aggregate ;
 
 positional_array_aggregate		:	'(' expression ',' expression (',' expression)* ')'
-    | '(' expression (',' expression)* ',' OTHERS '=>' expression ')'
-    | '(' expression (',' expression)* ',' OTHERS '=>' '<>' ')'
-    ;
+                                | '(' expression (',' expression)* ',' OTHERS '=>' expression ')'
+                                | '(' expression (',' expression)* ',' OTHERS '=>' '<>' ')'
+                                ;
 
 named_array_aggregate			:	'(' array_component_association (',' array_component_association)* ')' ;
 
 array_component_association		:	discrete_choice_list '=>' expression
-    | discrete_choice_list '=>' '<>'
-    ;
+                                |   discrete_choice_list '=>' '<>'
+                                ;
 
 //4.4
-expression          :   relation (AND relation)*
-                    |   relation (AND THEN relation)*
-                    |   relation (OR relation)*
-                    |   relation (OR ELSE relation)*
-                    |   relation (XOR relation)*
-                    ;
+expression                      :   relation (AND relation)*
+                                |   relation (AND THEN relation)*
+                                |   relation (OR relation)*
+                                |   relation (OR ELSE relation)*
+                                |   relation (XOR relation)*
+                                ;
 
-choice_expression	:	choice_relation (AND choice_relation)*
-                    |   choice_relation (OR choice_relation)*
-                    |   choice_relation (XOR choice_relation)*
-                    |   choice_relation (AND THEN choice_relation)*
-                    |   choice_relation (OR ELSE choice_relation)*
-                    ;
+choice_expression               :	choice_relation (AND choice_relation)*
+                                |   choice_relation (OR choice_relation)*
+                                |   choice_relation (XOR choice_relation)*
+                                |   choice_relation (AND THEN choice_relation)*
+                                |   choice_relation (OR ELSE choice_relation)*
+                                ;
 
 choice_relation					:	simple_expression (relational_operator simple_expression)? ;
 
@@ -426,225 +429,224 @@ sequence_of_statements			:	statement (statement)* (label)* ;
 
 statement						:	(label)* simple_statement | (label)* compound_statement ;
 
-simple_statement		:	null_statement
-    | assignment_statement
-    | exit_statement
-    | goto_statement
-    | procedure_call_statement
-    | simple_return_statement
-    | entry_call_statement
-    | requeue_statement
-    | delay_statement
-    | abort_statement
-    | raise_statement
-    | code_statement
-    | pragma
-    ;
+simple_statement                :   null_statement
+                                |   assignment_statement
+                                |   exit_statement
+                                |   goto_statement
+                                |   procedure_call_statement
+                                |   simple_return_statement
+                                |   entry_call_statement
+                                |   requeue_statement
+                                |   delay_statement
+                                |   abort_statement
+                                |   raise_statement
+                                |   code_statement
+                                |   pragma
+                                ;
 
-compound_statement		:	if_statement
-    | case_statement
-    | loop_statement
-    | block_statement
-    | extended_return_statement
-    | accept_statement
-    | select_statement
-    ;
+compound_statement              :   if_statement
+                                |   case_statement
+                                |   loop_statement
+                                |   block_statement
+                                |   extended_return_statement
+                                |   accept_statement
+                                |   select_statement
+                                ;
 
-null_statement				:	NULL ';' ;
+null_statement				    :	NULL ';' ;
 
-assignment_statement		:	name ':=' expression ';' ;
+assignment_statement		    :	name ':=' expression ';' ;
 
-exit_statement				:	EXIT (name)? (WHEN condition)? ';' ;
+exit_statement				    :	EXIT (name)? (WHEN condition)? ';' ;
 
-goto_statement				:	GOTO name ';' ;
+goto_statement				    :	GOTO name ';' ;
 
-procedure_call_statement	:	name ';'
-    | prefix actual_parameter_part ';'
-    ;
+procedure_call_statement	    :	name ';'
+                                |   prefix actual_parameter_part ';'
+                                ;
 
 
-label						:	'<<' statement_identifier '>>' ;
+label						    :	'<<' statement_identifier '>>' ;
 
-statement_identifier		:	direct_name ;
+statement_identifier		    :	direct_name ;
 
-if_statement	:
-    IF condition THEN
-    sequence_of_statements
-    (ELSIF condition THEN sequence_of_statements)*
-    (ELSE sequence_of_statements)?
-    END IF ';'
-    ;
+if_statement                    :
+                                    IF condition THEN
+                                    sequence_of_statements
+                                    (ELSIF condition THEN sequence_of_statements)*
+                                    (ELSE sequence_of_statements)?
+                                    END IF ';'
+                                ;
 
-case_statement	:
-    CASE expression IS
-    case_statement_alternative
-    (case_statement_alternative)*
-    END CASE ';'
-    ;
+case_statement                  :
+                                    CASE expression IS
+                                    case_statement_alternative
+                                    (case_statement_alternative)*
+                                    END CASE ';'
+                                ;
 
-case_statement_alternative	:	WHEN discrete_choice_list '=>' sequence_of_statements ;
+case_statement_alternative	    :	WHEN discrete_choice_list '=>' sequence_of_statements ;
 
-loop_statement				: (statement_identifier COLON)?
-    (iteration_scheme)? LOOP
-    sequence_of_statements
-    END LOOP (IDENTIFIER)? ';'
-    ;
+loop_statement                  :
+                                    (statement_identifier COLON)?
+                                    (iteration_scheme)? LOOP
+                                    sequence_of_statements
+                                    END LOOP (IDENTIFIER)? ';'
+                                ;
 
-iteration_scheme			:	WHILE condition
-    | FOR loop_parameter_specification
-    | FOR iterator_specification
-    ;
+iteration_scheme			    :	WHILE condition
+                                |   FOR loop_parameter_specification
+                                |   FOR iterator_specification
+                                ;
 
 loop_parameter_specification	:	IDENTIFIER IN (REVERSE)? discrete_subtype_definition ;
 
-iterator_specification			:	IDENTIFIER IN (REVERSE)? name
-    | IDENTIFIER (COLON subtype_indication)? OF (REVERSE)? name
-    ;
+iterator_specification			:   IDENTIFIER IN (REVERSE)? name
+                                |   IDENTIFIER (COLON subtype_indication)? OF (REVERSE)? name
+                                ;
 
-block_statement	:
-    (statement_identifier COLON)?
-    (DECLARE declarative_part)?
-    BEGIN
-    handled_sequence_of_statements
-    END (IDENTIFIER)? ';'
-    ;
+block_statement	                :
+                                    (statement_identifier COLON)?
+                                    (DECLARE declarative_part)?
+                                    BEGIN
+                                    handled_sequence_of_statements
+                                    END (IDENTIFIER)? ';'
+                                ;
 
 //6.1
-subprogram_declaration	:
-    (overriding_indicator)?
-    subprogram_specification
-    (aspect_specification)? ';'
-    ;
+subprogram_declaration	        :
+                                    (overriding_indicator)?
+                                    subprogram_specification
+                                    (aspect_specification)? ';'
+                                ;
 
-subprogram_specification	:	procedure_specification | function_specification ;
+subprogram_specification	    :	procedure_specification | function_specification ;
 
-procedure_specification		:	PROCEDURE defining_program_unit_name parameter_profile ;
+procedure_specification		    :	PROCEDURE defining_program_unit_name parameter_profile ;
 
-function_specification		:	FUNCTION defining_designator parameter_and_result_profile ;
+function_specification		    :	FUNCTION defining_designator parameter_and_result_profile ;
 
-designator					:	(parent_unit_name DOT )? IDENTIFIER | operator_symbol ;
+designator					    :	(parent_unit_name DOT )? IDENTIFIER | operator_symbol ;
 
-defining_designator			:	defining_program_unit_name | defining_operator_symbol ;
+defining_designator			    :	defining_program_unit_name | defining_operator_symbol ;
 
-defining_program_unit_name	:	(parent_unit_name DOT )? IDENTIFIER ;
+defining_program_unit_name	    :	(parent_unit_name DOT )? IDENTIFIER ;
 
-operator_symbol				:	STRING_LITERAL ;
+operator_symbol				    :	STRING_LITERAL ;
 
-defining_operator_symbol	:	operator_symbol ;
+defining_operator_symbol	    :	operator_symbol ;
 
-parameter_profile			:	(formal_part)? ;
+parameter_profile			    :	(formal_part)? ;
 
-parameter_and_result_profile	:
-    (formal_part)? RETURN (null_exclusion)? subtype_mark
-    | (formal_part)? RETURN access_definition
-    ;
+parameter_and_result_profile	:   (formal_part)? RETURN (null_exclusion)? subtype_mark
+                                |   (formal_part)? RETURN access_definition
+                                ;
 
-formal_part					:	'(' parameter_specification (';' parameter_specification)* ')' ;
+formal_part					    :	'(' parameter_specification (';' parameter_specification)* ')' ;
 
-parameter_specification		:	defining_identifier_list COLON (ALIASED)? xmode (null_exclusion)? subtype_mark (':=' default_expression)?
-    | defining_identifier_list COLON access_definition (':=' default_expression)?
-    ;
+parameter_specification		    :	defining_identifier_list COLON (ALIASED)? xmode (null_exclusion)? subtype_mark (':=' default_expression)?
+                                |   defining_identifier_list COLON access_definition (':=' default_expression)?
+                                ;
 
-xmode	:	 (IN)? | IN OUT | OUT ;
+xmode                           :   (IN)? | IN OUT | OUT ;
 
 //6.3
-subprogram_body	:
-    (overriding_indicator)?
-    subprogram_specification
-    (aspect_specification)? IS
-    declarative_part
-    BEGIN
-    handled_sequence_of_statements
-    END (designator)? ';'
-    ;
+subprogram_body	                :
+                                    (overriding_indicator)?
+                                    subprogram_specification
+                                    (aspect_specification)? IS
+                                    declarative_part
+                                    BEGIN
+                                    handled_sequence_of_statements
+                                    END (designator)? ';'
+                                ;
 
-function_call	:	(direct_name | prefix) (actual_parameter_part)?
-	            ;
+actual_parameter_part           :	'(' parameter_association (',' parameter_association)* ')' ;
 
-actual_parameter_part               :	'(' parameter_association (',' parameter_association)* ')' ;
+parameter_association           :	(selector_name '=>' )? explicit_actual_parameter ;
 
-parameter_association               :	(selector_name '=>' )? explicit_actual_parameter ;
+explicit_actual_parameter       :	expression | name ;
 
-explicit_actual_parameter           :	expression | name ;
-
-simple_return_statement             :	RETURN (expression)? ';' ;
+simple_return_statement         :	RETURN (expression)? ';' ;
 
 extended_return_object_declaration	:	IDENTIFIER COLON (ALIASED)? (CONSTANT)? return_subtype_indication (':=' expression)? ;
 
-extended_return_statement           :	RETURN extended_return_object_declaration (DO handled_sequence_of_statements END RETURN)? ';' ;
+extended_return_statement       :	RETURN extended_return_object_declaration (DO handled_sequence_of_statements END RETURN)? ';' ;
 
-return_subtype_indication           :	subtype_indication | access_definition ;
+return_subtype_indication       :	subtype_indication | access_definition ;
 
-null_procedure_declaration          :   (overriding_indicator)? procedure_specification IS NULL (aspect_specification)? ';' ;
+null_procedure_declaration      :   (overriding_indicator)? procedure_specification IS NULL (aspect_specification)? ';' ;
 
-expression_function_declaration     :   (overriding_indicator)? function_specification IS '(' expression ')' (aspect_specification)? ';' ;
+expression_function_declaration :   (overriding_indicator)? function_specification IS '(' expression ')' (aspect_specification)? ';' ;
 
 //7.1
-package_declaration		:	package_specification ';' ;
+package_declaration		        :	package_specification ';' ;
 
-//package_specification	:	PACKAGE full_name	(aspect_specification)? IS
-package_specification	:	PACKAGE defining_program_unit_name	(aspect_specification)? IS
-    (basic_declarative_item)*
-    (PRIVATE (basic_declarative_item)* )?
-    END ((parent_unit_name DOT )? IDENTIFIER)?
-    ;
+package_specification	        :
+                                    PACKAGE defining_program_unit_name	(aspect_specification)? IS
+                                    (basic_declarative_item)*
+                                    (PRIVATE (basic_declarative_item)* )?
+                                    END ((parent_unit_name DOT )? IDENTIFIER)?
+                                ;
 
 //7.2
-package_body	:	PACKAGE BODY defining_program_unit_name (aspect_specification)? IS
-    declarative_part
-    (BEGIN handled_sequence_of_statements)?
-    END ((parent_unit_name DOT )? IDENTIFIER)? ';'
-    ;
+package_body	                :
+                                    PACKAGE BODY defining_program_unit_name (aspect_specification)? IS
+                                    declarative_part
+                                    (BEGIN handled_sequence_of_statements)?
+                                    END ((parent_unit_name DOT )? IDENTIFIER)? ';'
+                                ;
 
 //7.3
-private_type_declaration		:	TYPE IDENTIFIER (discriminant_part)? 
-    IS ((ABSTRACT)? TAGGED)? (LIMITED)? PRIVATE (aspect_specification)? ';'
-    ;
+private_type_declaration        :
+                                    TYPE IDENTIFIER (discriminant_part)?
+                                    IS ((ABSTRACT)? TAGGED)? (LIMITED)? PRIVATE
+                                    (aspect_specification)? ';'
+                                ;
 
-private_extension_declaration	:	TYPE IDENTIFIER (discriminant_part)?
-    IS (ABSTRACT)? (LIMITED | SYNCHRONIZED)? NEW subtype_indication
-    (AND interface_list)? WITH PRIVATE
-    (aspect_specification)? ';'
-    ;
+private_extension_declaration	:
+                                    TYPE IDENTIFIER (discriminant_part)?
+                                    IS (ABSTRACT)? (LIMITED | SYNCHRONIZED)? NEW subtype_indication
+                                    (AND interface_list)? WITH PRIVATE
+                                    (aspect_specification)? ';'
+                                ;
 
 //8.3.1
-overriding_indicator	:	(NOT)? OVERRIDING ;
+overriding_indicator	        :	(NOT)? OVERRIDING ;
 
 //8.4
-use_clause				:	use_package_clause | use_type_clause ;
+use_clause				        :	use_package_clause | use_type_clause ;
 
-use_package_clause		:	USE package_name (',' package_name)* ';' ;
+use_package_clause		        :	USE package_name (',' package_name)* ';' ;
 
-use_type_clause			:	USE (ALL)? TYPE subtype_mark (',' subtype_mark)* ';' ;
+use_type_clause			        :	USE (ALL)? TYPE subtype_mark (',' subtype_mark)* ';' ;
 
 //8.5
-renaming_declaration	:
-    object_renaming_declaration
-    | exception_renaming_declaration
-    | package_renaming_declaration
-    | subprogram_renaming_declaration
-    | generic_renaming_declaration
-    ;
+renaming_declaration	        :   object_renaming_declaration
+                                |   exception_renaming_declaration
+                                |   package_renaming_declaration
+                                |   subprogram_renaming_declaration
+                                |   generic_renaming_declaration
+                                ;
 
 object_renaming_declaration		:	IDENTIFIER COLON (null_exclusion)? subtype_mark RENAMES name (aspect_specification)? ';'
-    | IDENTIFIER COLON access_definition RENAMES name (aspect_specification)? ';'
-    ;
+                                |   IDENTIFIER COLON access_definition RENAMES name (aspect_specification)? ';'
+                                ;
 
 exception_renaming_declaration	:	IDENTIFIER COLON EXCEPTION RENAMES name (aspect_specification)? ';' ;
 
 package_renaming_declaration	:	PACKAGE defining_program_unit_name RENAMES name (aspect_specification)? ';' ;
 
-subprogram_renaming_declaration	:
-    (overriding_indicator)?
-    subprogram_specification RENAMES name
-    (aspect_specification)? ';'
-    ;
+subprogram_renaming_declaration :
+                                    (overriding_indicator)?
+                                    subprogram_specification RENAMES name
+                                    (aspect_specification)? ';'
+                                ;
 
-generic_renaming_declaration	:
-    GENERIC PACKAGE defining_program_unit_name RENAMES name (aspect_specification)? ';'
-    | GENERIC PROCEDURE defining_program_unit_name RENAMES name (aspect_specification)? ';'
-    | GENERIC FUNCTION defining_program_unit_name RENAMES name (aspect_specification)? ';'
-    ;
+generic_renaming_declaration	:   GENERIC PACKAGE defining_program_unit_name RENAMES name (aspect_specification)? ';'
+                                |   GENERIC PROCEDURE defining_program_unit_name RENAMES name (aspect_specification)? ';'
+                                |   GENERIC FUNCTION defining_program_unit_name RENAMES name (aspect_specification)? ';'
+                                ;
 
 //9.1
 task_type_declaration	:
