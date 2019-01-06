@@ -259,31 +259,38 @@ package_name    :   IDENTIFIER ( DOT IDENTIFIER)*;
 full_name       :   IDENTIFIER ( DOT ( IDENTIFIER | CHARACTER_LITERAL | STRING_LITERAL ) | TIC IDENTIFIER )*	 
                 ; 
 
-name    :   direct_name | explicit_dereference
-        |   indexed_component | slice
-        |   selected_component | attribute_reference
-        |   type_conversion | function_call
-        |   CHARACTER_LITERAL | qualified_expression
-        |   generalized_reference | generalized_indexing
+name    :   direct_name
+        |   name DOT ALL                                // explicit_dereference
+        |   name '(' expression (',' expression)* ')'   // indexed_component
+        |   name '(' discrete_range ')'                 // slice
+        |   name DOT selector_name                      // selected_component
+        |   name TIC attribute_designator               // attribute_reference
+        |   type_conversion
+//      |   name (actual_parameter_part)?               // function_call
+        |   CHARACTER_LITERAL
+        |   qualified_expression
+//      |   name                                        // generalized_reference
+        |   name actual_parameter_part                  // generalized_indexing
         ;
 
-direct_name						:	IDENTIFIER | operator_symbol (TIC IDENTIFIER)?;
+//direct_name						:	IDENTIFIER | operator_symbol (TIC IDENTIFIER)?; // handle "**"`Result
+direct_name						:	IDENTIFIER | operator_symbol ; 
 
-prefix							:	full_name ;
+prefix							:	name ;
 
-explicit_dereference			:	full_name DOT ALL;
+//explicit_dereference			:	full_name DOT ALL;
 
-implicit_dereference			:	full_name ;
+implicit_dereference			:	name ;
 
-indexed_component				:	full_name '(' expression (',' expression)* ')' ;
+//indexed_component				:	full_name '(' expression (',' expression)* ')' ;
 
-slice							:	full_name '(' discrete_range ')' ;
+//slice							:	full_name '(' discrete_range ')' ;
 
-selected_component				:	full_name DOT selector_name ;
+//selected_component				:	full_name DOT selector_name ;
 
 selector_name					:	IDENTIFIER | CHARACTER_LITERAL | operator_symbol ;
 
-attribute_reference				:	full_name TIC attribute_designator ;
+//attribute_reference				:	full_name TIC attribute_designator ;
 
 attribute_designator			:	IDENTIFIER ( '(' expression ')' )? | ACCESS | DELTA | DIGITS | MOD ( '(' expression ')' )?;
 
@@ -291,16 +298,16 @@ range_attribute_reference		:	prefix TIC range_attribute_designator ;
 
 range_attribute_designator		:	RANGE ('(' expression ')' )? ;
 
-generalized_reference			:	full_name ;
+generalized_reference			:	name ;
 
-generalized_indexing			:	prefix actual_parameter_part ;
+generalized_indexing			:	name actual_parameter_part ;
 
-function_call                   :   (direct_name | prefix) (actual_parameter_part)? ;
+//function_call                   :   (direct_name | prefix) (actual_parameter_part)? ;
 
-////6.4
-//function_call                   :   name
-//                                |   prefix actual_parameter_part
-//                                ;
+//6.4
+function_call                   :   name
+                                |   prefix actual_parameter_part
+                                ;
 
 //4.2 literals
 
@@ -670,7 +677,8 @@ task_definition	:
     END (IDENTIFIER)?
     ;
 
-task_item	:	entry_declaration | aspect_clause ;
+//task_item	:	entry_declaration | aspect_clause;
+task_item	:	entry_declaration | aspect_clause | pragma;
 
 task_body	:
     TASK BODY IDENTIFIER
@@ -845,7 +853,8 @@ abort_statement				:	ABORT name (',' name)* ';' ;
 compilation	: (compilation_unit)* ;
 
 compilation_unit	:
-    context_clause (library_item | subunit) (pragma)*
+    context_clause (library_item | subunit)
+    | pragma // handle empty body (ir pragma no_body, see g-md5.adb)
     ;
 
 library_item	:	(PRIVATE)? library_unit_declaration
@@ -870,7 +879,7 @@ parent_unit_name		:	name ;
 
 context_clause			:	(context_item)* ;
 
-context_item			:	(pragma)* (with_clause | use_clause | pragma) ;
+context_item			:	(with_clause | use_clause | pragma);
 
 with_clause				:	limited_with_clause | nonlimited_with_clause ;
 
@@ -1062,8 +1071,8 @@ aspect_specification	:
 
 aspect_mark			:	IDENTIFIER(TIC name)? ;
 
-aspect_definition	:	full_name | expression ;
-//aspect_definition	:	name | expression | IDENTIFIER ;
+//aspect_definition	:	full_name | expression ;
+aspect_definition	:	name | expression | IDENTIFIER ;
 
 attribute_definition_clause	:
     FOR local_name TIC attribute_designator USE expression ';'
@@ -1170,7 +1179,7 @@ REQUEUE : R E Q U E U E;
 RETURN : R E T U R N;
 REVERSE : R E V E R S E;
 SELECT : S E L E C T;
-SEPARATE : S E P E R A T E;
+SEPARATE : S E P A R A T E;
 SOME : S O M E;
 SUBTYPE : S U B T Y P E;
 SYNCHRONIZED : S Y N C H R O N I Z E D;
